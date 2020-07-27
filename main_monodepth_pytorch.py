@@ -174,8 +174,9 @@ class Model:
             data = to_device(data, self.device)
             left = data['left_image']
             right = data['right_image']
+            disp_model_based = data['disp_model_based']
             disps = self.model(left)
-            loss = self.loss_function(disps, [left, right])
+            loss = self.loss_function(disps, [left, right,,disp_model_based])
             val_losses.append(loss.item())
             running_val_loss += loss.item()
 
@@ -194,11 +195,12 @@ class Model:
                 data = to_device(data, self.device)
                 left = data['left_image']
                 right = data['right_image']
+                disp_model_bassed = data['disp_model_based']
 
                 # One optimization iteration
                 self.optimizer.zero_grad()
                 disps = self.model(left)
-                loss = self.loss_function(disps, [left, right])
+                loss = self.loss_function(disps, [left, right,disp_model_based])
                 loss.backward()
                 self.optimizer.step()
                 losses.append(loss.item())
@@ -246,8 +248,9 @@ class Model:
                 data = to_device(data, self.device)
                 left = data['left_image']
                 right = data['right_image']
+                disp_model_bassed = data['disp_model_based']
                 disps = self.model(left)
-                loss = self.loss_function(disps, [left, right])
+                loss = self.loss_function(disps, [left, right, disp_model_based])
                 val_losses.append(loss.item())
                 running_val_loss += loss.item()
 
@@ -305,7 +308,6 @@ class Model:
         np.save(self.output_directory + '/disparities_pp.npy',
                 disparities_pp)
         print('Finished Testing')
-
 
 def main(args):
     args = return_arguments()
